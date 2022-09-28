@@ -69,7 +69,7 @@ Congratulations, you have a basic setup of Kubernetes!
 First, let's create MySQL in our Cluster.
 ```
 kubectl create secret generic mysql --from-literal=password=randompassword 
-kubectl create secret generic database-url --from-literal=password='mysql://root:randompassword@mysql:3306/nestjs_demo'
+kubectl create secret generic database-url --from-literal=url='mysql://root:randompassword@mysql:3306/nestjs_demo'
 cd persistent-demo
 kubectl apply -f mysql
 kubectl port-forward service/mysql 3307:3306
@@ -78,6 +78,7 @@ Then, let's try connecting to it with our NestJS backend application.
 ```
 cd hello-prisma
 npm i # Install dependencies
+npx prisma migrate dev
 npm run start:dev
 ```
 Let's say that we're happy then we can deploy our application to the cluster with
