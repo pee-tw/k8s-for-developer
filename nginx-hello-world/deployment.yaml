@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-hello-world
+  labels:
+    app: nginx-hello-world
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-hello-world # Pay attention to this
+  template:
+    metadata:
+      labels:
+        app: nginx-hello-world # Pay attention to this
+    spec:
+      containers:
+        - name: nginx-hello-world
+          image: nginx
+          resources:
+            requests:
+              memory: "8Mi"
+              cpu: "0.1"
+            limits:
+              memory: "16Mi"
+              cpu: "1"
+          readinessProbe: # For adding/removing from IP
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            periodSeconds: 10
+          livenessProbe: # Killing non-responding container
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 60
+          ports:
+            - containerPort: 80

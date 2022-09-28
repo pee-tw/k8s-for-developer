@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nestjs-demo
+  labels:
+    app: nestjs-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nestjs-demo # Pay attention to this
+  template:
+    metadata:
+      labels:
+        app: nestjs-demo # Pay attention to this
+    spec:
+      containers:
+        - name: nestjs-demo
+          image: piitan/nestjs-demo
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "0.1"
+            limits:
+              memory: "128Mi"
+              cpu: "1"
+          readinessProbe: # For adding/removing from IP
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            periodSeconds: 5
+          livenessProbe: # Killing non-responding container
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 60
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: database-url
+                  key: url

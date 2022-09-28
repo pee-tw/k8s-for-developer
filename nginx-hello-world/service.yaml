@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-hello-world
+spec:
+  selector:
+    app: nginx-hello-world # This is how the service maps to the pod
+  ports:
+    - protocol: TCP
+      port: 80
+  type: ClusterIP

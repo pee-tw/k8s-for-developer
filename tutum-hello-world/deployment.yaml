@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tutum-hello-world
+  labels:
+    app: tutum-hello-world
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tutum-hello-world # Pay attention to this
+  template:
+    metadata:
+      labels:
+        app: tutum-hello-world # Pay attention to this
+    spec:
+      containers:
+        - name: tutum-hello-world
+          image: tutum/hello-world
+          resources:
+            requests:
+              memory: "8Mi"
+              cpu: "0.1"
+            limits:
+              memory: "16Mi"
+              cpu: "1"
+          readinessProbe: # For adding/removing from IP
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            periodSeconds: 5
+          livenessProbe: # Killing non-responding container
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 60
+          ports:
+            - containerPort: 80

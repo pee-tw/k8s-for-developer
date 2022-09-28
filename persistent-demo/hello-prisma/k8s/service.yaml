@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nestjs-demo
+spec:
+  selector:
+    app: nestjs-demo
+  ports:
+  - protocol: TCP
+    port: 3000
+  type: ClusterIP
